@@ -4,14 +4,18 @@ CURR_DIR=$PWD
 WASM_NODE=${PWD}/nodes
 NODE_NAME=$1
 
+if [ "$NODE_NAME" = "" ];then
+        echo "Not specified node name."
+        exit 1
+fi
+
 echo "#####################build wasm node"
 
 cd ${WASM_NODE}/${NODE_NAME}
+rm out -rf
+mkdir out
 
 # use WAMR SDK to build out the .wasm binary
-
-rm -rf out
-mkdir out
 
 /opt/wasi-sdk/bin/clang++     \
         --target=wasm32-wasi -O3 -z stack-size=4096 -Wl,--initial-memory=65536 \
