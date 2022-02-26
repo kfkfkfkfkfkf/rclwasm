@@ -14,11 +14,27 @@
 
 #include <chrono>
 #include <string>
+#include <random>
 
 #include "rclcpp/rclcpp.hpp"
 #include "std_msgs/msg/string.hpp"
 
-#define MAX 100000
+#define MAX_1 10000
+#define MAX_2 20000
+#define MAX_3 30000
+#define MAX_4 40000
+#define MAX_5 50000
+#define MAX_6 60000
+#define MAX_7 70000
+#define MAX_8 80000
+#define MAX_9 90000
+#define MAX_10 100000
+
+#define MSG_1 256
+#define MSG_2 512
+#define MSG_3 1024
+#define MSG_4 2048
+#define MSG_5 4096
 
 using namespace std::chrono_literals;
 
@@ -30,15 +46,19 @@ using namespace std::chrono_literals;
 int main(int argc, char *argv[])
 {
   rclcpp::init(argc, argv);
-  auto node = rclcpp::Node::make_shared("minimal_publisher");
+  std::random_device rnd;
+  std::string node_name = "minimal_publisher" + std::to_string(rnd());
+  auto node = rclcpp::Node::make_shared(node_name);
   auto publisher = node->create_publisher<std_msgs::msg::String>("topic", 10);
   std_msgs::msg::String message;
-  auto publish_count = 0;
+  std::string data(MSG_1, 'a');
   // rclcpp::WallRate loop_rate(500ms);
 
-  for (int i = 0; rclcpp::ok() && i < MAX; i++)
+  std::cout << "Start Publishing:" <<node_name<< std::endl;
+  
+  for (int i = 0; rclcpp::ok() && i < MAX_1; i++)
   {
-    message.data = "Hello, world! " + std::to_string(publish_count++);
+    message.data = data;
     // RCLCPP_INFO(node->get_logger(), "Publishing: '%s'", message.data.c_str());
     try
     {
@@ -47,6 +67,7 @@ int main(int argc, char *argv[])
     }
     catch (const rclcpp::exceptions::RCLError &e)
     {
+      std::cout << "Error" << std::endl;
       /*RCLCPP_ERROR(
         node->get_logger(),
         "unexpectedly failed with %s",
